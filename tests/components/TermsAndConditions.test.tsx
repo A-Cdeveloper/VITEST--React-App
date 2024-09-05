@@ -17,4 +17,8 @@ describe("TermsAndConditions", () => {
     expect(button).toBeInTheDocument();
     expect(button).toBeDisabled();
   });
+
+  it("should enable button when checkbox is checked", () => {
+    render(<TermsAndConditions />);
+  });
 });
