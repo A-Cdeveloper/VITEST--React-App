@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import SearchBox from "../../src/components/SearchBox";
 import userEvent from "@testing-library/user-event";
-import { input } from "@testing-library/user-event/dist/cjs/event/input.js";
 
 describe("SearchBox", () => {
   const renderComponent = () => {
