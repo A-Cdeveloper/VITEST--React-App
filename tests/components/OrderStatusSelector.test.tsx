@@ -1,24 +1,26 @@
-import { render, screen } from "@testing-library/react";
+import { findByRole, render, screen } from "@testing-library/react";
 import OrderStatusSelector from "../../src/components/OrderStatusSelector";
 import { Theme } from "@radix-ui/themes";
 import userEvent from "@testing-library/user-event";
 
 describe("OrderStatusSelector", () => {
+  const user = userEvent.setup();
+  const labelsDefault = ["New", "Processed", "Fulfilled"];
+  const onChange = vi.fn();
+
   const renderComponent = () => {
     render(
       <Theme>
-        <OrderStatusSelector onChange={vi.fn()} />
+        <OrderStatusSelector onChange={onChange} />
       </Theme>
     );
-
-    const user = userEvent.setup();
-    const labelsDefault = ["New", "Processed", "Fulfilled"];
 
     return {
       user,
       button: screen.getByRole("combobox"),
       labelsDefault,
       getOptions: () => screen.findAllByRole("option"),
+      onChange,
     };
   };
 
@@ -27,7 +29,7 @@ describe("OrderStatusSelector", () => {
     expect(button).toHaveTextContent(/new/i);
   });
 
-  it("should render choosen status", async () => {
+  it("should render correct statuses", async () => {
     const { button, user, labelsDefault, getOptions } = renderComponent();
 
     await user.click(button);
@@ -37,11 +39,15 @@ describe("OrderStatusSelector", () => {
 
     const labels = options.map((option) => option.textContent);
     expect(labels).toEqual(labelsDefault);
+  });
 
-    // My tests Aleksandar
-    // options.forEach(async (option) => {
-    //   await user.click(option);
-    //   expect(button).toHaveTextContent(String(option.textContent));
-    // });
+  it("should call onChange with process when 'Processed' is selected", async () => {
+    const { user, button } = renderComponent();
+
+    await user.click(button);
+
+    const option = await screen.findByRole("option", { name: /processed/i });
+    await user.click(option);
+    expect(onChange).toHaveBeenCalledWith("processed");
   });
 });
