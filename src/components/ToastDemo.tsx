@@ -1,8 +1,6 @@
-import toast from "react-hot-toast";
-
-const ToastDemo = () => {
+const ToastDemo = ({ onClick }: { onClick: () => void }) => {
   return (
-    <button className="btn" onClick={() => toast.success("Success")}>
+    <button className="btn" onClick={onClick}>
       Show Toast
     </button>
   );
