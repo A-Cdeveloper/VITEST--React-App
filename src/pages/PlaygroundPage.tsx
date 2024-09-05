@@ -2,6 +2,7 @@
 
 import SearchBox from "../components/SearchBox";
 import TagList from "../components/TagList";
+import ToastDemo from "../components/ToastDemo";
 
 const PlaygroundPage = () => {
   return (
@@ -10,7 +11,8 @@ const PlaygroundPage = () => {
     //     console.log(text);
     //   }}
     // />
-    <TagList />
+    // <TagList />
+    <ToastDemo />
   );
 };
 
