@@ -1,9 +1,10 @@
 // import Onboarding from "../components/Onboarding";
 
-import toast, { Toaster } from "react-hot-toast";
+//import toast, { Toaster } from "react-hot-toast";
 // import SearchBox from "../components/SearchBox";
 // import TagList from "../components/TagList";
-import ToastDemo from "../components/ToastDemo";
+// import ToastDemo from "../components/ToastDemo";
+import OrderStatusSelector from "../components/OrderStatusSelector";
 
 const PlaygroundPage = () => {
   return (
@@ -13,10 +14,11 @@ const PlaygroundPage = () => {
     //   }}
     // />
     // <TagList />
-    <>
-      <ToastDemo onClick={() => toast.success("Success")} />
-      <Toaster />
-    </>
+    // <>
+    //   <ToastDemo onClick={() => toast.success("Success")} />
+    //   <Toaster />
+    // </>
+    <OrderStatusSelector onChange={console.log} />
   );
 };
 
