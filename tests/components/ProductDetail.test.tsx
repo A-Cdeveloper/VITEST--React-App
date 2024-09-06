@@ -4,16 +4,31 @@ import ProductDetail from "../../src/components/ProductDetail";
 
 import { server } from "../mocks/server";
 import { HttpResponse, http } from "msw";
-import { products } from "../mocks/data";
+
+import { db } from "../mocks/db";
 
 describe("ProductDetail", () => {
-  it("should render product details if id is correct", async () => {
-    render(<ProductDetail productId={1} />);
+  let productId: number;
 
-    const productName = await screen.findByText(new RegExp(products[0].name));
+  beforeAll(() => {
+    const product = db.product.create();
+    productId = product.id;
+  });
+
+  afterAll(() => {
+    db.product.delete({ where: { id: { equals: productId } } });
+  });
+
+  it("should render product details if id is correct", async () => {
+    const product = db.product.findFirst({
+      where: { id: { equals: productId } },
+    });
+
+    render(<ProductDetail productId={productId} />);
+    const productName = await screen.findByText(new RegExp(product!.name));
     expect(productName).toBeInTheDocument();
     const price = await screen.findByText(
-      new RegExp(products[0].price.toString())
+      new RegExp(product!.price.toString())
     );
     expect(price).toBeInTheDocument();
   });
@@ -28,7 +43,6 @@ describe("ProductDetail", () => {
     const message = await screen.findByText(/not found/i);
     expect(message).toBeInTheDocument();
   });
-
   it('should render "The given product was not found" if id is 0', async () => {
     render(<ProductDetail productId={0} />);
     const message = await screen.findByText(/invalid /i);

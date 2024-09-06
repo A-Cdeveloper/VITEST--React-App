@@ -5,7 +5,7 @@ import { db } from "../mocks/db";
 describe("main", () => {
   it("should test", () => {});
 
-  const product = db.product.create();
+  //const product = db.product.create();
   //console.log(product);
   //console.log(db.product.getAll());
 

@@ -2,8 +2,28 @@ import { render, screen } from "@testing-library/react";
 import ProductList from "../../src/components/ProductList";
 import { server } from "../mocks/server";
 import { HttpResponse, http } from "msw";
+import { before } from "node:test";
+import { db } from "../mocks/db";
 
 describe("ProductList", () => {
+  const productsIds: number[] = [];
+
+  beforeAll(() => {
+    [1, 2, 3].forEach(() => {
+      const product = db.product.create();
+      productsIds.push(product.id);
+    });
+  });
+  afterAll(() => {
+    db.product.deleteMany({
+      where: {
+        id: {
+          in: productsIds,
+        },
+      },
+    });
+  });
+
   it("should render list of products", async () => {
     render(<ProductList />);
     const products = await screen.findAllByRole("listitem");
