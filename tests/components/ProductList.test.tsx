@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import ProductList from "../../src/components/ProductList";
 import { server } from "../mocks/server";
 import { HttpResponse, http } from "msw";
-import { before } from "node:test";
+
 import { db } from "../mocks/db";
 
 describe("ProductList", () => {
@@ -38,6 +38,17 @@ describe("ProductList", () => {
     );
     render(<ProductList />);
     const message = await screen.findByText(/no products/i);
+    expect(message).toBeInTheDocument();
+  });
+
+  it("should render erorr message", async () => {
+    server.use(
+      http.get("/products", () => {
+        return HttpResponse.error();
+      })
+    );
+    render(<ProductList />);
+    const message = await screen.findByText(/error/i);
     expect(message).toBeInTheDocument();
   });
 });
