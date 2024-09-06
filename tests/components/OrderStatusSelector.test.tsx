@@ -1,7 +1,7 @@
-import { findByRole, render, screen } from "@testing-library/react";
-import OrderStatusSelector from "../../src/components/OrderStatusSelector";
 import { Theme } from "@radix-ui/themes";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import OrderStatusSelector from "../../src/components/OrderStatusSelector";
 
 describe("OrderStatusSelector", () => {
   const user = userEvent.setup();
