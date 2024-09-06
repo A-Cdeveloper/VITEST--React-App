@@ -1,9 +1,10 @@
 import { render, screen } from "@testing-library/react";
 
 import ProductDetail from "../../src/components/ProductDetail";
-import { products } from "../mocks/handlers";
+
 import { server } from "../mocks/server";
 import { HttpResponse, http } from "msw";
+import { products } from "../mocks/data";
 
 describe("ProductDetail", () => {
   it("should render product details if id is correct", async () => {
