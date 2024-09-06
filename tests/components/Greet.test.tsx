@@ -15,4 +15,11 @@ describe("Greet", () => {
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent(/login/i);
   });
+
+  // it("testing mock function", async () => {
+  //   const response = await fetch("/categories");
+  //   const data = await response.json();
+  //   // console.log(data);
+  //   expect(data).toHaveLength(5);
+  // });
 });
