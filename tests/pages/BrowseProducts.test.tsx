@@ -13,12 +13,14 @@ describe("BrowseProducts", () => {
     render(<BrowseProducts />, { wrapper: Theme });
 
     return {
-      progressbarCategories: screen.getByRole("progressbar", {
-        name: /categories/i,
-      }),
-      progressbarProducts: screen.getByRole("progressbar", {
-        name: /products/i,
-      }),
+      progressbarCategories: () =>
+        screen.getByRole("progressbar", {
+          name: /categories/i,
+        }),
+      progressbarProducts: () =>
+        screen.getByRole("progressbar", {
+          name: /products/i,
+        }),
     };
   };
 
@@ -30,7 +32,7 @@ describe("BrowseProducts", () => {
       })
     );
     const { progressbarCategories } = renderComponent();
-    expect(progressbarCategories).toBeInTheDocument();
+    expect(progressbarCategories()).toBeInTheDocument();
   });
 
   //
@@ -48,7 +50,7 @@ describe("BrowseProducts", () => {
       })
     );
     const { progressbarProducts } = renderComponent();
-    expect(progressbarProducts).toBeInTheDocument();
+    expect(progressbarProducts()).toBeInTheDocument();
   });
 
   //
@@ -59,5 +61,40 @@ describe("BrowseProducts", () => {
         name: /products/i,
       });
     await waitForElementToBeRemoved(progressbarProducts);
+  });
+
+  //
+
+  //
+  it("should not render error message if categories cannot be fetched", async () => {
+    server.use(
+      http.get("/categories", () => {
+        return HttpResponse.error();
+      })
+    );
+    renderComponent();
+
+    await waitForElementToBeRemoved(() =>
+      screen.queryByRole("progressbar", {
+        name: /categories/i,
+      })
+    );
+
+    const errorCategories = screen.queryByText(/error/i);
+    expect(errorCategories).not.toBeInTheDocument();
+    const catList = screen.queryByRole("combobox", { name: /categories/i });
+    expect(catList).not.toBeInTheDocument();
+  });
+
+  //
+  it("should render error message durring fetchng products", async () => {
+    server.use(
+      http.get("/products", async () => {
+        return HttpResponse.error();
+      })
+    );
+    renderComponent();
+    const errorProducts = await screen.findByText(/error/i);
+    expect(errorProducts).toBeInTheDocument();
   });
 });
