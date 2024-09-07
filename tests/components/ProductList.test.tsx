@@ -9,7 +9,7 @@ import { HttpResponse, http } from "msw";
 
 import { db } from "../mocks/db";
 import delay from "delay";
-import { QueryClient, QueryClientProvider } from "react-query";
+
 import AllProviders from "../AllProviders";
 
 describe("ProductList", () => {
@@ -32,11 +32,7 @@ describe("ProductList", () => {
   });
 
   it("should render list of products", async () => {
-    render(
-      <AllProviders>
-        <ProductList />
-      </AllProviders>
-    );
+    render(<ProductList />, { wrapper: AllProviders });
     const products = await screen.findAllByRole("listitem");
     expect(products.length).toBeGreaterThan(0);
   });
@@ -47,11 +43,7 @@ describe("ProductList", () => {
         return HttpResponse.json([]);
       })
     );
-    render(
-      <AllProviders>
-        <ProductList />
-      </AllProviders>
-    );
+    render(<ProductList />, { wrapper: AllProviders });
     const message = await screen.findByText(/no products/i);
     expect(message).toBeInTheDocument();
   });
@@ -62,11 +54,7 @@ describe("ProductList", () => {
         return HttpResponse.error();
       })
     );
-    render(
-      <AllProviders>
-        <ProductList />
-      </AllProviders>
-    );
+    render(<ProductList />, { wrapper: AllProviders });
     const message = await screen.findByText(/error/i);
     expect(message).toBeInTheDocument();
   });
@@ -79,21 +67,13 @@ describe("ProductList", () => {
       })
     );
 
-    render(
-      <AllProviders>
-        <ProductList />
-      </AllProviders>
-    );
+    render(<ProductList />, { wrapper: AllProviders });
     const loading = await screen.findByText(/loading/i);
     expect(loading).toBeInTheDocument();
   });
 
   it("should remove loading indicator when data is fetched", async () => {
-    render(
-      <AllProviders>
-        <ProductList />
-      </AllProviders>
-    );
+    render(<ProductList />, { wrapper: AllProviders });
     await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 
@@ -103,11 +83,7 @@ describe("ProductList", () => {
         return HttpResponse.error();
       })
     );
-    render(
-      <AllProviders>
-        <ProductList />
-      </AllProviders>
-    );
+    render(<ProductList />, { wrapper: AllProviders });
     await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 });
