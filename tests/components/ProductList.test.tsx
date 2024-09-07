@@ -9,6 +9,7 @@ import { HttpResponse, http } from "msw";
 
 import { db } from "../mocks/db";
 import delay from "delay";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 describe("ProductList", () => {
   const productsIds: number[] = [];
@@ -29,8 +30,24 @@ describe("ProductList", () => {
     });
   });
 
+  const renderComponent = () => {
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <ProductList />
+      </QueryClientProvider>
+    );
+  };
+
   it("should render list of products", async () => {
-    render(<ProductList />);
+    renderComponent();
     const products = await screen.findAllByRole("listitem");
     expect(products.length).toBeGreaterThan(0);
   });
@@ -41,7 +58,7 @@ describe("ProductList", () => {
         return HttpResponse.json([]);
       })
     );
-    render(<ProductList />);
+    renderComponent();
     const message = await screen.findByText(/no products/i);
     expect(message).toBeInTheDocument();
   });
@@ -52,7 +69,7 @@ describe("ProductList", () => {
         return HttpResponse.error();
       })
     );
-    render(<ProductList />);
+    renderComponent();
     const message = await screen.findByText(/error/i);
     expect(message).toBeInTheDocument();
   });
@@ -65,13 +82,13 @@ describe("ProductList", () => {
       })
     );
 
-    render(<ProductList />);
+    renderComponent();
     const loading = await screen.findByText(/loading/i);
     expect(loading).toBeInTheDocument();
   });
 
   it("should remove loading indicator when data is fetched", async () => {
-    render(<ProductList />);
+    renderComponent();
     await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 
@@ -81,7 +98,7 @@ describe("ProductList", () => {
         return HttpResponse.error();
       })
     );
-    render(<ProductList />);
+    renderComponent();
     await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 });
