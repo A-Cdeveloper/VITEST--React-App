@@ -10,6 +10,7 @@ import { HttpResponse, http } from "msw";
 import { db } from "../mocks/db";
 import delay from "delay";
 import { QueryClient, QueryClientProvider } from "react-query";
+import AllProviders from "../AllProviders";
 
 describe("ProductList", () => {
   const productsIds: number[] = [];
@@ -30,24 +31,12 @@ describe("ProductList", () => {
     });
   });
 
-  const renderComponent = () => {
-    const queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: false,
-        },
-      },
-    });
-
-    render(
-      <QueryClientProvider client={queryClient}>
-        <ProductList />
-      </QueryClientProvider>
-    );
-  };
-
   it("should render list of products", async () => {
-    renderComponent();
+    render(
+      <AllProviders>
+        <ProductList />
+      </AllProviders>
+    );
     const products = await screen.findAllByRole("listitem");
     expect(products.length).toBeGreaterThan(0);
   });
@@ -58,7 +47,11 @@ describe("ProductList", () => {
         return HttpResponse.json([]);
       })
     );
-    renderComponent();
+    render(
+      <AllProviders>
+        <ProductList />
+      </AllProviders>
+    );
     const message = await screen.findByText(/no products/i);
     expect(message).toBeInTheDocument();
   });
@@ -69,7 +62,11 @@ describe("ProductList", () => {
         return HttpResponse.error();
       })
     );
-    renderComponent();
+    render(
+      <AllProviders>
+        <ProductList />
+      </AllProviders>
+    );
     const message = await screen.findByText(/error/i);
     expect(message).toBeInTheDocument();
   });
@@ -82,13 +79,21 @@ describe("ProductList", () => {
       })
     );
 
-    renderComponent();
+    render(
+      <AllProviders>
+        <ProductList />
+      </AllProviders>
+    );
     const loading = await screen.findByText(/loading/i);
     expect(loading).toBeInTheDocument();
   });
 
   it("should remove loading indicator when data is fetched", async () => {
-    renderComponent();
+    render(
+      <AllProviders>
+        <ProductList />
+      </AllProviders>
+    );
     await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 
@@ -98,7 +103,11 @@ describe("ProductList", () => {
         return HttpResponse.error();
       })
     );
-    renderComponent();
+    render(
+      <AllProviders>
+        <ProductList />
+      </AllProviders>
+    );
     await waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 });
