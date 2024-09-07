@@ -5,6 +5,7 @@
 // import TagList from "../components/TagList";
 // import ToastDemo from "../components/ToastDemo";
 import OrderStatusSelector from "../components/OrderStatusSelector";
+import BrowseProducts from "./BrowseProductsPage";
 
 const PlaygroundPage = () => {
   return (
@@ -18,7 +19,8 @@ const PlaygroundPage = () => {
     //   <ToastDemo onClick={() => toast.success("Success")} />
     //   <Toaster />
     // </>
-    <OrderStatusSelector onChange={console.log} />
+    // <OrderStatusSelector onChange={console.log} />
+    <BrowseProducts />
   );
 };
 
