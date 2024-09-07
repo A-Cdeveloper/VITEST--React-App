@@ -10,6 +10,7 @@ import { server } from "../mocks/server";
 import { HttpResponse, delay, http } from "msw";
 
 import { db } from "../mocks/db";
+import AllProviders from "../AllProviders";
 
 describe("ProductDetail", () => {
   let productId: number;
@@ -28,7 +29,7 @@ describe("ProductDetail", () => {
       where: { id: { equals: productId } },
     });
 
-    render(<ProductDetail productId={productId} />);
+    render(<ProductDetail productId={productId} />, { wrapper: AllProviders });
     const productName = await screen.findByText(new RegExp(product!.name));
     expect(productName).toBeInTheDocument();
     const price = await screen.findByText(
@@ -43,13 +44,13 @@ describe("ProductDetail", () => {
         return HttpResponse.json(null, { status: 404 });
       })
     );
-    render(<ProductDetail productId={1} />);
+    render(<ProductDetail productId={1} />, { wrapper: AllProviders });
     const message = await screen.findByText(/not found/i);
     expect(message).toBeInTheDocument();
   });
 
   it('should render "The given product was not found" if id is 0', async () => {
-    render(<ProductDetail productId={0} />);
+    render(<ProductDetail productId={0} />, { wrapper: AllProviders });
     const message = await screen.findByText(/invalid /i);
     expect(message).toBeInTheDocument();
   });
@@ -60,7 +61,7 @@ describe("ProductDetail", () => {
         return HttpResponse.error();
       })
     );
-    render(<ProductDetail productId={1} />);
+    render(<ProductDetail productId={1} />, { wrapper: AllProviders });
     const message = await screen.findByText(/error/i);
     expect(message).toBeInTheDocument();
   });
@@ -73,18 +74,18 @@ describe("ProductDetail", () => {
       })
     );
 
-    render(<ProductDetail productId={1} />);
+    render(<ProductDetail productId={1} />, { wrapper: AllProviders });
     const loading = await screen.findByText(/loading/i);
     expect(loading).toBeInTheDocument();
   });
 
   it("should remove loading indicator when product is fetched", async () => {
-    render(<ProductDetail productId={1} />);
+    render(<ProductDetail productId={1} />, { wrapper: AllProviders });
     waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 
   it("should remove loading indicator when product fetch fail", async () => {
-    render(<ProductDetail productId={1} />);
+    render(<ProductDetail productId={1} />, { wrapper: AllProviders });
     waitForElementToBeRemoved(() => screen.getByText(/loading/i));
   });
 });
