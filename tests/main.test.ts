@@ -9,8 +9,8 @@ describe("main", () => {
   //console.log(product);
   //console.log(db.product.getAll());
 
-  const category = db.category.create();
-  console.log(category);
+  // const category = db.category.create();
+  // console.log(category);
 
   // const product = {
   //   name: faker.commerce.productName(),
