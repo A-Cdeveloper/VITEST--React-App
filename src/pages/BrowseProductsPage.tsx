@@ -1,22 +1,14 @@
-import { Select, Table } from "@radix-ui/themes";
+import { Table } from "@radix-ui/themes";
 import axios from "axios";
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useQuery } from "react-query";
+import CategorySelect from "../components/CategorySelect";
 import QuantitySelector from "../components/QuantitySelector";
-import { Category, Product } from "../entities";
+import { Product } from "../entities";
 
 function BrowseProducts() {
-  const {
-    data: categories,
-    isLoading: isCategoriesLoading,
-    error: errorCategories,
-  } = useQuery<Category[], Error>({
-    queryKey: ["categories"],
-    queryFn: () => axios.get("/categories").then((res) => res.data),
-  });
-
   const {
     data: products,
     isLoading: isProductsLoading,
@@ -30,38 +22,11 @@ function BrowseProducts() {
     number | undefined
   >();
 
-  if (errorProducts) return <div>Error: {errorProducts.message}</div>;
-
-  const renderCategories = () => {
-    if (isCategoriesLoading)
-      return (
-        <div role="progressbar" aria-label="categories">
-          <Skeleton />
-        </div>
-      );
-    // if (errorCategories) return <div>Error: {errorCategories}</div>;
-    if (errorCategories) return null;
-    return (
-      <Select.Root
-        onValueChange={(categoryId) =>
-          setSelectedCategoryId(parseInt(categoryId))
-        }
-      >
-        <Select.Trigger placeholder="Filter by Category" />
-        <Select.Content>
-          <Select.Group>
-            <Select.Label>Category</Select.Label>
-            <Select.Item value="all">All</Select.Item>
-            {categories?.map((category) => (
-              <Select.Item key={category.id} value={category.id.toString()}>
-                {category.name}
-              </Select.Item>
-            ))}
-          </Select.Group>
-        </Select.Content>
-      </Select.Root>
-    );
+  const selectCategoryIdHandler = (categoryId: number) => {
+    setSelectedCategoryId(categoryId);
   };
+
+  if (errorProducts) return <div>Error: {errorProducts.message}</div>;
 
   const renderProducts = () => {
     const skeletons = [1, 2, 3, 4, 5];
@@ -117,7 +82,7 @@ function BrowseProducts() {
   return (
     <div>
       <h1>Products</h1>
-      <div className="max-w-xs">{renderCategories()}</div>
+      <CategorySelect onSelectedCategoryId={selectCategoryIdHandler} />
       {renderProducts()}
     </div>
   );
