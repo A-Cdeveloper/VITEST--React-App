@@ -81,7 +81,7 @@ const ProductForm = ({ product, onSubmit }: Props) => {
               onValueChange={(value) => field.onChange(+value)}
             >
               <Select.Trigger placeholder="Category" aria-label="category" />
-              <Select.Content>
+              <Select.Content aria-label="categoriesOptions">
                 <Select.Group>
                   {categories?.map((category) => (
                     <Select.Item
