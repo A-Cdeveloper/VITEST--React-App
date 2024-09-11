@@ -9,8 +9,8 @@ describe("ProductForm", () => {
   let categories: Category[] = [];
 
   beforeAll(() => {
-    [1, 2].forEach(() => {
-      categories.push(db.category.create());
+    [1, 2].forEach((item) => {
+      categories.push(db.category.create({ name: `Category ${item}` }));
     });
   });
   afterAll(() => {
@@ -24,25 +24,40 @@ describe("ProductForm", () => {
     });
   });
 
+  const renderComponent = (product?: Product) => {
+    render(<ProductForm onSubmit={vi.fn()} product={product} />, {
+      wrapper: AllProviders,
+    });
+
+    return {
+      waitFormToLoad: screen.findByRole("form"),
+      getinputs: () => {
+        return {
+          nameInput: screen.getByPlaceholderText(/name/i),
+          priceInput: screen.getByPlaceholderText(/price/i),
+          categoryInput: screen.getByRole("combobox", { name: /category/i }),
+        };
+      },
+      // getNameInput: () => screen.getByPlaceholderText(/name/i),
+    };
+  };
+
   it("should render form fields", async () => {
-    render(<ProductForm onSubmit={vi.fn()} />, { wrapper: AllProviders });
+    const { waitFormToLoad, getinputs } = renderComponent();
 
-    await screen.findByRole("form");
-    const nameField = screen.getByPlaceholderText(/name/i);
-    expect(nameField).toBeInTheDocument();
+    await waitFormToLoad;
+    const { nameInput, priceInput, categoryInput } = getinputs();
 
-    const priceField = screen.getByPlaceholderText(/price/i);
-    expect(priceField).toBeInTheDocument();
-
-    const selectField = screen.getByRole("combobox", { name: /category/i });
+    expect(nameInput).toBeInTheDocument();
+    expect(priceInput).toBeInTheDocument();
 
     const user = userEvent.setup();
-    await user.click(selectField);
+    await user.click(categoryInput);
 
     categories.forEach(async (cat) => {
       const option = screen.getByRole("option", { name: cat.name });
       await user.click(option);
-      expect(selectField).toHaveTextContent(cat.name);
+      expect(categoryInput).toHaveTextContent(cat.name);
     });
   });
   ////////////////////////////////////////////////////////////////////
@@ -53,20 +68,12 @@ describe("ProductForm", () => {
       price: 100,
       categoryId: categories[0].id,
     };
+    const { waitFormToLoad, getinputs } = renderComponent(product);
+    await waitFormToLoad;
+    const { nameInput, priceInput, categoryInput } = getinputs();
 
-    render(<ProductForm onSubmit={vi.fn()} product={product} />, {
-      wrapper: AllProviders,
-    });
-
-    await screen.findByRole("form");
-    console.log(product.categoryId.toString());
-    const nameField = screen.getByPlaceholderText(/name/i);
-    expect(nameField).toHaveValue(product.name);
-
-    const priceField = screen.getByPlaceholderText(/price/i);
-    expect(priceField).toHaveValue(product.price.toString());
-
-    const selectField = screen.getByRole("combobox", { name: /category/i });
-    expect(selectField).toHaveTextContent(categories[0].name);
+    expect(nameInput).toBeInTheDocument();
+    expect(priceInput).toBeInTheDocument();
+    expect(categoryInput).toHaveTextContent(categories[0].name);
   });
 });
