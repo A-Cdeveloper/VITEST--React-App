@@ -24,15 +24,10 @@ describe("ProductForm", () => {
     });
   });
 
-  it.skip("should render form fields", async () => {
+  it("should render form fields", async () => {
     render(<ProductForm onSubmit={vi.fn()} />, { wrapper: AllProviders });
 
     await screen.findByRole("form");
-    // wait for loader to be removed
-    // const loader = screen.getByText(/loading/i);
-    // await waitForElementToBeRemoved(loader);
-
-    // const nameField = await screen.findByPlaceholderText(/name/i);
     const nameField = screen.getByPlaceholderText(/name/i);
     expect(nameField).toBeInTheDocument();
 
@@ -40,7 +35,6 @@ describe("ProductForm", () => {
     expect(priceField).toBeInTheDocument();
 
     const selectField = screen.getByRole("combobox", { name: /category/i });
-    expect(selectField).toBeInTheDocument();
 
     const user = userEvent.setup();
     await user.click(selectField);
@@ -48,7 +42,7 @@ describe("ProductForm", () => {
     categories.forEach(async (cat) => {
       const option = screen.getByRole("option", { name: cat.name });
       await user.click(option);
-      expect(selectField).toHaveValue(cat.id.toString());
+      expect(selectField).toHaveTextContent(cat.name);
     });
   });
   ////////////////////////////////////////////////////////////////////
