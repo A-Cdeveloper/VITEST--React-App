@@ -51,6 +51,7 @@ const ProductForm = ({ product, onSubmit }: Props) => {
         <TextField.Root className="max-w-sm">
           <TextField.Input
             // aria-label="Name"
+            autoFocus
             placeholder="Name"
             {...register("name")}
             size="3"
