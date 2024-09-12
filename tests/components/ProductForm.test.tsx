@@ -203,7 +203,7 @@ describe("ProductForm", () => {
 
   it("should shot toas with error if form is not submited", async () => {
     const { waitFormToLoad, onSubmit } = renderComponent();
-    onSubmit.mockRejectedValue({});
+    onSubmit.mockRejectedValue({}); // Simulate failure form submission
     const { validData, fillForm } = await waitFormToLoad();
     await fillForm({ ...validData });
     screen.debug();
@@ -216,7 +216,7 @@ describe("ProductForm", () => {
 
   it("should disable submit button if form is submited", async () => {
     const { waitFormToLoad, onSubmit } = renderComponent();
-    onSubmit.mockReturnValue(new Promise(() => {}));
+    onSubmit.mockReturnValue(new Promise(() => {})); // Simulate successful form submission
     const { validData, fillForm, submitButton } = await waitFormToLoad();
     await fillForm({ ...validData });
     expect(submitButton).toBeDisabled();
@@ -224,11 +224,7 @@ describe("ProductForm", () => {
 
   it("should reenable submit button after submition", async () => {
     const { waitFormToLoad, onSubmit } = renderComponent();
-    onSubmit.mockResolvedValue(
-      new Promise<void>((res, rej) => {
-        return res();
-      })
-    );
+    onSubmit.mockResolvedValue({}); // Simulate successful form submission
     const { validData, fillForm, submitButton } = await waitFormToLoad();
     await fillForm({ ...validData });
     expect(submitButton).not.toBeDisabled();
@@ -236,7 +232,7 @@ describe("ProductForm", () => {
 
   it("should reenable submit button if submition fail", async () => {
     const { waitFormToLoad, onSubmit } = renderComponent();
-    onSubmit.mockRejectedValue({});
+    onSubmit.mockRejectedValue({}); // Simulate failure form submission
     const { validData, fillForm, submitButton } = await waitFormToLoad();
     await fillForm({ ...validData });
     expect(submitButton).not.toBeDisabled();
