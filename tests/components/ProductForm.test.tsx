@@ -233,4 +233,12 @@ describe("ProductForm", () => {
     await fillForm({ ...validData });
     expect(submitButton).not.toBeDisabled();
   });
+
+  it("should reenable submit button if submition fail", async () => {
+    const { waitFormToLoad, onSubmit } = renderComponent();
+    onSubmit.mockRejectedValue({});
+    const { validData, fillForm, submitButton } = await waitFormToLoad();
+    await fillForm({ ...validData });
+    expect(submitButton).not.toBeDisabled();
+  });
 });
