@@ -41,6 +41,7 @@ describe("ProductForm", () => {
           nameInput: screen.getByPlaceholderText(/name/i),
           priceInput: screen.getByPlaceholderText(/price/i),
           categoryInput: screen.getByRole("combobox", { name: /category/i }),
+          submitButton: screen.getByRole("button", { name: /submit/i }),
         };
       },
     };
@@ -84,5 +85,20 @@ describe("ProductForm", () => {
     const { nameInput } = await waitFormToLoad();
 
     expect(nameInput).toHaveFocus();
+  });
+
+  /////
+  it("display error if name is missing", async () => {
+    const { waitFormToLoad } = renderComponent();
+    const form = await waitFormToLoad();
+    const user = userEvent.setup();
+    await user.type(form.priceInput, "10");
+    await user.click(form.categoryInput);
+    const option = screen.getAllByRole("option");
+    await user.click(option[0]);
+    await user.click(form.submitButton);
+    const error = screen.getByRole("alert");
+    expect(error).toBeInTheDocument();
+    expect(error).toHaveTextContent(/required/i);
   });
 });
