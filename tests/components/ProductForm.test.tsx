@@ -30,17 +30,18 @@ describe("ProductForm", () => {
   });
 
   const renderComponent = (product?: Product) => {
-    render(<ProductForm onSubmit={vi.fn()} product={product} />, {
+    const onSubmit = vi.fn();
+    render(<ProductForm onSubmit={onSubmit} product={product} />, {
       wrapper: AllProviders,
     });
 
     return {
+      onSubmit,
       expectErrorToBeInTheDocument: (errorMessage: RegExp) => {
         const error = screen.getByRole("alert");
         expect(error).toBeInTheDocument();
         expect(error).toHaveTextContent(errorMessage);
       },
-
       waitFormToLoad: async () => {
         await screen.findByRole("form");
 
@@ -131,7 +132,6 @@ describe("ProductForm", () => {
   });
 
   // vALIDATION TESTS
-
   it.each([
     {
       testCase: "missing",
@@ -181,5 +181,16 @@ describe("ProductForm", () => {
 
     await fillForm({ ...validData, price });
     expectErrorToBeInTheDocument(errorMessage);
+  });
+
+  // SUBMITION TESTS
+
+  it.only("should submit form", async () => {
+    const { waitFormToLoad, onSubmit } = renderComponent();
+    const { validData, fillForm } = await waitFormToLoad();
+    await fillForm({ ...validData });
+
+    const { name, price, categoryId } = validData;
+    expect(onSubmit).toHaveBeenCalledWith({ name, price, categoryId });
   });
 });
