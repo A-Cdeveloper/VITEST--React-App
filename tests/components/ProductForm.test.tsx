@@ -88,7 +88,7 @@ describe("ProductForm", () => {
       },
     };
   };
-  S;
+
   // RENDER TESTS
   it("should render form fields", async () => {
     const { waitFormToLoad } = renderComponent();
