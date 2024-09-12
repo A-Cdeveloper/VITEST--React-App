@@ -5,6 +5,7 @@ import { db } from "../mocks/db";
 import { Category, Product } from "../../src/entities";
 import userEvent from "@testing-library/user-event";
 import { faker } from "@faker-js/faker";
+import ErrorMessage from "../../src/components/ErrorMessage";
 
 describe("ProductForm", () => {
   let categories: Category[] = [];
@@ -88,10 +89,40 @@ describe("ProductForm", () => {
   });
 
   /////
-  it("display error if name is missing", async () => {
+  // it("display error if name is missing", async () => {
+  //   const { waitFormToLoad } = renderComponent();
+  //   const form = await waitFormToLoad();
+  //   const user = userEvent.setup();
+  //   await user.type(form.priceInput, "10");
+  //   await user.click(form.categoryInput);
+  //   const option = screen.getAllByRole("option");
+  //   await user.click(option[0]);
+  //   await user.click(form.submitButton);
+  //   const error = screen.getByRole("alert");
+  //   expect(error).toBeInTheDocument();
+  //   expect(error).toHaveTextContent(/required/i);
+  // });
+
+  //////
+
+  it.each([
+    {
+      testCase: "missing",
+      errorMessage: /required/i,
+    },
+    {
+      testCase: "longer then 255 chars",
+      name: "a".repeat(256),
+      errorMessage: /must contain/i,
+    },
+  ])("display error if name is $testCase", async ({ name, errorMessage }) => {
     const { waitFormToLoad } = renderComponent();
     const form = await waitFormToLoad();
     const user = userEvent.setup();
+
+    if (name) {
+      await user.type(form.nameInput, name);
+    }
     await user.type(form.priceInput, "10");
     await user.click(form.categoryInput);
     const option = screen.getAllByRole("option");
@@ -99,6 +130,6 @@ describe("ProductForm", () => {
     await user.click(form.submitButton);
     const error = screen.getByRole("alert");
     expect(error).toBeInTheDocument();
-    expect(error).toHaveTextContent(/required/i);
+    expect(error).toHaveTextContent(errorMessage);
   });
 });
