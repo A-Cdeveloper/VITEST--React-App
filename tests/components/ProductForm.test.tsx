@@ -201,7 +201,7 @@ describe("ProductForm", () => {
     expect(onSubmit).toHaveBeenCalledWith({ name, price, categoryId });
   });
 
-  it.only("should shot toas with error if form is not submited", async () => {
+  it("should shot toas with error if form is not submited", async () => {
     const { waitFormToLoad, onSubmit } = renderComponent();
     onSubmit.mockRejectedValue({});
     const { validData, fillForm } = await waitFormToLoad();
@@ -212,5 +212,25 @@ describe("ProductForm", () => {
 
     expect(toast).toBeInTheDocument();
     expect(toast).toHaveTextContent(/error/i);
+  });
+
+  it("should disable submit button if form is submited", async () => {
+    const { waitFormToLoad, onSubmit } = renderComponent();
+    onSubmit.mockReturnValue(new Promise(() => {}));
+    const { validData, fillForm, submitButton } = await waitFormToLoad();
+    await fillForm({ ...validData });
+    expect(submitButton).toBeDisabled();
+  });
+
+  it("should reenable submit button after submition", async () => {
+    const { waitFormToLoad, onSubmit } = renderComponent();
+    onSubmit.mockResolvedValue(
+      new Promise<void>((res, rej) => {
+        return res();
+      })
+    );
+    const { validData, fillForm, submitButton } = await waitFormToLoad();
+    await fillForm({ ...validData });
+    expect(submitButton).not.toBeDisabled();
   });
 });
