@@ -1,7 +1,7 @@
 import { PropsWithChildren, createContext, useState } from "react";
 import { Product } from "../entities";
 
-type CartItem = {
+export type CartItem = {
   product: Product;
   quantity: number;
 };
