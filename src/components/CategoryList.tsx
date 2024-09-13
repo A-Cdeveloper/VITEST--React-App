@@ -1,20 +1,19 @@
-import { useEffect } from "react";
-import { fetchCategories } from "../store/categorySlice";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { useQuery } from "react-query";
+
+import { Category } from "../entities";
+import axios from "axios";
 
 function CategoryList() {
-  const dispatch = useAppDispatch();
   const {
-    list: categories,
-    loading,
+    data: categories,
+    isLoading: loading,
     error,
-  } = useAppSelector((state) => state.category);
+  } = useQuery<Category[], Error>({
+    queryKey: ["categories"],
+    queryFn: () => axios.get<Category[]>("/categories").then((res) => res.data),
+  });
 
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
-
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div>

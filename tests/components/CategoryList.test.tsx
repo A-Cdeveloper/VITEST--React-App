@@ -11,6 +11,7 @@ import { Category } from "../../src/entities";
 import ReduxProvider from "../../src/providers/ReduxProvider";
 import { db } from "../mocks/db";
 import { simulateDelay, simulateError } from "../utils";
+import AllProviders from "../AllProviders";
 
 describe("CategoryList", () => {
   let categories: Category[] = [];
@@ -34,7 +35,7 @@ describe("CategoryList", () => {
   });
 
   const renderComponent = () => {
-    render(<CategoryList />, { wrapper: ReduxProvider });
+    render(<CategoryList />, { wrapper: AllProviders });
   };
 
   ////////////////////////////////////////
