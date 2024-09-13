@@ -4,6 +4,7 @@
 // import SearchBox from "../components/SearchBox";
 // import TagList from "../components/TagList";
 // import ToastDemo from "../components/ToastDemo";
+import CategoryList from "../components/CategoryList";
 import OrderStatusSelector from "../components/OrderStatusSelector";
 import ProductForm from "../components/ProductForm";
 import BrowseProducts from "./BrowseProductsPage";
@@ -23,7 +24,9 @@ const PlaygroundPage = () => {
     // <OrderStatusSelector onChange={console.log} />
     // <BrowseProducts />
     // <ProductForm />
-    <></>
+    <>
+      <CategoryList />
+    </>
   );
 };
 

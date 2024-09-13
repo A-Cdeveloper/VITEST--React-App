@@ -4,9 +4,11 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 
 function CategoryList() {
   const dispatch = useAppDispatch();
-  const categories = useAppSelector((state) => state.category.list);
-  const loading = useAppSelector((state) => state.category.loading);
-  const error = useAppSelector((state) => state.category.error);
+  const {
+    list: categories,
+    loading,
+    error,
+  } = useAppSelector((state) => state.category);
 
   useEffect(() => {
     dispatch(fetchCategories());
