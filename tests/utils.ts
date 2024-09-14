@@ -36,4 +36,5 @@ export const mockAuthState = (authState: AuthState) => {
     logout: vi.fn(),
     handleRedirectCallback: vi.fn(),
   });
+  return authState;
 };
