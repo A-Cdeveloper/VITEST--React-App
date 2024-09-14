@@ -1,3 +1,4 @@
+import { User, useAuth0 } from "@auth0/auth0-react";
 import { HttpResponse, delay, http } from "msw";
 import { server } from "./mocks/server";
 
@@ -16,4 +17,23 @@ export const simulateError = (endpoint: string) => {
       return HttpResponse.error();
     })
   );
+};
+
+type AuthState = {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: User | undefined;
+};
+
+export const mockAuthState = (authState: AuthState) => {
+  vi.mocked(useAuth0).mockReturnValue({
+    ...authState,
+    getAccessTokenSilently: vi.fn(),
+    getAccessTokenWithPopup: vi.fn(),
+    getIdTokenClaims: vi.fn(),
+    loginWithRedirect: vi.fn(),
+    loginWithPopup: vi.fn(),
+    logout: vi.fn(),
+    handleRedirectCallback: vi.fn(),
+  });
 };
