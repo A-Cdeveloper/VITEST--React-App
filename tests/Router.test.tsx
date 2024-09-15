@@ -53,10 +53,18 @@ describe("Router", () => {
     ).toBeInTheDocument();
   });
 
-  // it("should render Error page for the invalid route", () => {
-  //   renderComponent("/abc");
-  //   expect(screen.getByRole("heading", { name: /oops/i }));
-  // });
+  it("should render Error message for the route /products:id in product not found", async () => {
+    renderComponent(`/products/123456`);
+
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
+
+    expect(screen.getByText(/not found/i)).toBeInTheDocument();
+  });
+
+  it("should render Error page for the invalid route", () => {
+    renderComponent("/abc");
+    expect(screen.getByRole("heading", { name: /oops/i }));
+  });
   ///// admin area
   it("should render admin homepage for route /admin", () => {
     renderComponent("/admin");
