@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import UserList from "../../src/components/UserList";
+import UserTable from "../../src/components/UserTable";
 import { User } from "../../src/entities";
 import { db } from "../mocks/db";
 
-describe("UserList", () => {
+describe("UserTable", () => {
   const users: User[] = [];
 
   beforeAll(() => {
@@ -23,17 +23,17 @@ describe("UserList", () => {
   });
 
   it('should render "No users available" if users list is empty', () => {
-    render(<UserList users={[]} />);
+    render(<UserTable users={[]} />);
     expect(screen.getByText(/no users./i)).toBeInTheDocument();
   });
 
   it("should render users list if users list is not empty", () => {
-    render(<UserList users={users} />);
+    render(<UserTable users={users} />);
 
     users.forEach((user) => {
-      const link = screen.getByRole("link", { name: user.name });
-      expect(link).toBeInTheDocument();
-      expect(link).toHaveAttribute("href", `/users/${user.id}`);
+      const userLabel = screen.getByRole("cell", { name: user.name });
+      expect(userLabel).toBeInTheDocument();
+      expect(userLabel).toHaveTextContent(user.name);
     });
   });
 });

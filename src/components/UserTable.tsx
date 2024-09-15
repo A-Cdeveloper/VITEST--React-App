@@ -16,7 +16,7 @@ const UserTable = ({ users }: { users: User[] }) => {
         {users.map((user) => (
           <tr key={user.id}>
             <td>{user.id}</td>
-            <td>{user.name}</td>
+            <td aria-label={user.name}>{user.name}</td>
             <td>
               <a href={`/users/${user.id}`}>Edit</a>
             </td>
