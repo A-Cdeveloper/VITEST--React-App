@@ -1,4 +1,10 @@
-import { getByText, render, screen, waitFor } from "@testing-library/react";
+import {
+  getByText,
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { Product } from "../src/entities";
 import routes from "../src/routes";
@@ -36,22 +42,22 @@ describe("Router", () => {
   it("should render Product detail page for the route /products:id", async () => {
     renderComponent(`/products/${product.id}`);
 
-    expect(
-      await screen.findByRole("heading", { name: product.name })
-    ).toBeVisible();
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 
-    // await waitFor(() =>
-    //   expect(
-    //     screen.getByRole("heading", { name: product.name })
-    //   ).toBeInTheDocument()
-    // );
+    expect(
+      screen.getByRole("heading", { name: product.name })
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(RegExp(product.price.toString(), "i"))
+    ).toBeInTheDocument();
   });
 
   // it("should render Error page for the invalid route", () => {
   //   renderComponent("/abc");
   //   expect(screen.getByRole("heading", { name: /oops/i }));
   // });
-  /////
+  ///// admin area
   it("should render admin homepage for route /admin", () => {
     renderComponent("/admin");
     expect(screen.getByRole("heading", { name: /admin/i }));
