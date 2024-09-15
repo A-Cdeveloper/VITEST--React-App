@@ -206,7 +206,7 @@ describe("ProductForm", () => {
     onSubmit.mockRejectedValue({}); // Simulate failure form submission
     const { validData, fillForm } = await waitFormToLoad();
     await fillForm({ ...validData });
-    screen.debug();
+    //screen.debug();
 
     const toast = await screen.findByRole("status");
 
