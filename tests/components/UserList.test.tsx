@@ -1,25 +1,33 @@
 import { render, screen } from "@testing-library/react";
 import UserList from "../../src/components/UserList";
 import { User } from "../../src/entities";
+import { db } from "../mocks/db";
 
 describe("UserList", () => {
-  const users: User[] = [
-    {
-      id: 1,
-      name: "Aleksandar",
-    },
-    {
-      id: 2,
-      name: "Biljana",
-    },
-  ];
+  const users: User[] = [];
 
-  it('should render "No users available" if users list is empty', () => {
+  beforeAll(() => {
+    [1, 2, 3].forEach((i) => {
+      users.push(db.users.create());
+    });
+  });
+
+  afterAll(() => {
+    db.users.deleteMany({
+      where: {
+        id: {
+          in: users.map((user) => user.id),
+        },
+      },
+    });
+  });
+
+  it.only('should render "No users available" if users list is empty', () => {
     render(<UserList users={[]} />);
     expect(screen.getByText(/no users./i)).toBeInTheDocument();
   });
 
-  it("should render users list if users list is not empty", () => {
+  it.only("should render users list if users list is not empty", () => {
     render(<UserList users={users} />);
 
     users.forEach((user) => {

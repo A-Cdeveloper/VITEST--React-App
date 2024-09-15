@@ -15,6 +15,12 @@ export const db = factory({
     categoryId: faker.number.int,
     category: oneOf("category"),
   },
+
+  users: {
+    id: primaryKey(faker.number.int),
+    name: faker.person.fullName,
+    isAdmin: () => faker.datatype.boolean(),
+  },
 });
 
 export const getProductsByCategory = (categoryId: number) =>
