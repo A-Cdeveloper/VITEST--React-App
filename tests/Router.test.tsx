@@ -36,10 +36,14 @@ describe("Router", () => {
   it("should render Product detail page for the route /products:id", async () => {
     renderComponent(`/products/${product.id}`);
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole("heading", { name: product.name })
-      ).toBeInTheDocument()
-    );
+    expect(
+      await screen.findByRole("heading", { name: product.name })
+    ).toBeVisible();
+
+    // await waitFor(() =>
+    //   expect(
+    //     screen.getByRole("heading", { name: product.name })
+    //   ).toBeInTheDocument()
+    // );
   });
 });
