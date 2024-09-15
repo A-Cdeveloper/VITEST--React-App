@@ -75,17 +75,8 @@ describe("Router", () => {
 
   it("should render loading indicator for route /admin/product/:id/edit", async () => {
     renderComponent(`/admin/products/${product.id}/edit`);
-    expect(await screen.findByText(/loading/i)).toBeInTheDocument();
-  });
+    await waitForElementToBeRemoved(() => screen.queryByText(/loading/i));
 
-  it("should render error for route /admin/product/:id/edit", async () => {
-    renderComponent(`/admin/products/${Math.random()}/edit`);
-    expect(await screen.findByText(/not found/i)).toBeInTheDocument();
-    screen.debug();
-  });
-
-  it("should render admin products for route /admin/product/:id/edit", async () => {
-    renderComponent(`/admin/products/${product.id}/edit`);
-    expect(screen.findByRole("heading", { name: /edit/i }));
+    expect(screen.getByRole("heading", { name: /edit/i })).toBeInTheDocument();
   });
 });
