@@ -5,12 +5,12 @@ import AuthStatus from "../../src/components/AuthStatus";
 import { mockAuthState } from "../utils";
 
 describe("AuthStatus", () => {
-  const renderComponent = ({
+  const renderComponent = (
     isLoading = false,
     isAuthenticated = false,
-    user = undefined as { name: string } | undefined,
-  }) => {
-    const authState = mockAuthState({
+    user = undefined as { name: string } | undefined
+  ) => {
+    const { user: userauth } = mockAuthState({
       isLoading,
       isAuthenticated,
       user,
@@ -22,36 +22,27 @@ describe("AuthStatus", () => {
       </MemoryRouter>
     );
     return {
-      authState,
+      userauth,
     };
   };
 
   it("should render the loading indicator when get auth status", () => {
-    renderComponent({});
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    renderComponent(true, false, undefined);
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 
-  it.only("should render login button if user is not authenticated", () => {
-    renderComponent({
-      isLoading: false,
-      isAuthenticated: false,
-      user: undefined,
-    });
+  it("should render login button if user is not authenticated", () => {
+    renderComponent(false, false, undefined);
     expect(screen.getByRole("button", { name: /log in/i })).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: /log out/i })
     ).not.toBeInTheDocument();
   });
 
-  it.only("should render user name if user is  authenticated", () => {
-    const { authState } = renderComponent({
-      isLoading: false,
-      isAuthenticated: true,
-      user: {
-        name: "Aleksandar",
-      },
-    });
-    expect(screen.getByText(authState!.user!.name!)).toBeInTheDocument();
+  it("should render user name if user is authenticated", () => {
+    const { userauth } = renderComponent(false, true, { name: "Aleksandar" });
+
+    expect(screen.getByText(userauth!.name!)).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /log out/i })
     ).toBeInTheDocument();
