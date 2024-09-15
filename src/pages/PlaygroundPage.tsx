@@ -24,9 +24,7 @@ const PlaygroundPage = () => {
     // <OrderStatusSelector onChange={console.log} />
     // <BrowseProducts />
     // <ProductForm />
-    <>
-      <CategoryList />
-    </>
+    <>{/* <CategoryList /> */}</>
   );
 };
 

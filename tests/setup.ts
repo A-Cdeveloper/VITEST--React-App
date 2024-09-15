@@ -3,6 +3,7 @@ import ResizeObserver from "resize-observer-polyfill";
 import { server } from "./mocks/server";
 
 import { PropsWithChildren } from "react";
+import { withAuthenticationRequired } from "@auth0/auth0-react";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
@@ -22,7 +23,9 @@ vi.mock("@auth0//auth0-react", () => {
       user: undefined,
     }),
     Auth0Provider: ({ children }: PropsWithChildren) => children,
-    withAuthenticationRequired: vi.fn(),
+    withAuthenticationRequired: (component: React.ReactNode) => {
+      return component as React.ReactElement;
+    },
   };
 });
 
